@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/anc/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/anc/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/anc/API/javascript/storager.js"></script>
+<script type="text/javascript" src="/anc/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<title>ダンスアンケート</title>
+</head>
+<body>
+
+<?php
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
+    require_once($root."/anc/common/php/stored.php");
+
+    $danceList = stored("getItems",NULL);
+    $danceSkillList = stored("getSkillList",NULL);
+?>
+<form>
+<div id="personalDataWrapper">
+    <p>問1：君の、名前は：<input type="text" id="personalData"></p>
+</div>
+
+<div id="q1">
+    <p>問2:本気のダンスに参加する意思の有無を答えよ。ただし、興味はあるが振り付けを覚えていない者の参加企画は別に存在するものとする。　　<input type="radio" name="shallWeDance" value="yes" checked>はい<input type="radio" name="shallWeDance" value="no">いいえ</p>
+</div>
+
+<div id="q2Wrapper" class="1">
+<?php
+    echo "<p>問3：「だいいちきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
+    echo "<p>";
+    echo "<select id='danceKibou1' class='danceKibou'>";
+    echo "<option value='notSelected'>----------";
+    forEach($danceList as $dance){
+        if($dance["DANCE_ID"] == "0"){
+            continue;
+        }
+        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "　";
+    }
+    forEach($danceSkillList as $danceSkill){
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou1Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"];
+        echo "　";
+    }
+    echo "</p>\n";
+?>
+</div>
+
+<div id="q3Wrapper" class="2">
+<?php
+    echo "<p>問4：「だいにきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
+    echo "<p>";
+    echo "<select id='danceKibou2' class='danceKibou'>";
+    echo "<option value='notSelected'>----------";
+    forEach($danceList as $dance){
+        if($dance["DANCE_ID"] == "0"){
+            continue;
+        }
+        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "　";
+    }
+    forEach($danceSkillList as $danceSkill){
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou2Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"];
+        echo "　";
+    }
+    echo "</p>\n";
+?>
+</div>
+
+<div id="q4Wrapper" class="3">
+<?php
+    echo "<p>問5:「だいさんきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
+    echo "<p>";
+    echo "<select id='danceKibou3' class='danceKibou'>";
+    echo "<option value='notSelected'>----------";
+    forEach($danceList as $dance){
+        if($dance["DANCE_ID"] == "0"){
+            continue;
+        }
+        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "　";
+    }
+    forEach($danceSkillList as $danceSkill){
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou3Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"];
+        echo "　";
+    }
+    echo "</p>\n";
+?>
+</div>
+
+<div id="danceAbleLevel1" class="1">
+<?php
+    echo "<p>問6:以下の楽曲の中で、練度1で踊れる曲をすべて選べ</p>";
+    echo "<p>";
+    forEach($danceList as $dance){
+        if($dance["DANCE_ID"] == "0"){
+            continue;
+        }
+        echo "<input type='checkbox' id = 'danceableLevel1_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "　";
+    }
+    echo "</p>\n";
+?>
+</div>
+
+<div id="danceAbleLevel2" class="2">
+<?php
+    echo "<p>問7:以下の楽曲の中で、練度2で踊れる曲をすべて選べ</p>";
+    echo "<p>";
+    forEach($danceList as $dance){
+        if($dance["DANCE_ID"] == "0"){
+            continue;
+        }
+        echo "<input type='checkbox' id = 'danceableLevel2_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "　";
+    }
+    echo "</p>\n";
+?>
+</div>
+
+<div id="danceAbleLevel3" class="3">
+<?php
+    echo "<p>問8:以下の楽曲の中で、練度3で踊れる曲をすべて選べ</p>";
+    echo "<p>";
+    forEach($danceList as $dance){
+        if($dance["DANCE_ID"] == "0"){
+            continue;
+        }
+        echo "<input type='checkbox' id = 'danceableLevel3_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "　";
+    }
+    echo "</p>\n";
+?>
+</div>
+
+<p><button id ="register" type="button" value="register" >登録(確認ページに遷移します)</button></p>
+
+
+</form>
+</body>
+</html>
+
+<script>
+    window.onload=function(){
+       elemEventSetter(
+            document.getElementsByName("shallWeDance")
+            ,"change"
+            ,changeDance
+            ,null
+        );
+
+        elemEventSetter(
+            document.getElementsByClassName("danceKibou")
+            ,"change"
+            ,changeDanceKibou
+            ,null
+        );
+
+        elemEventSetter(
+            document.getElementsByClassName("danceKibouSkill")
+            ,"change"
+            ,danceAbleChange
+            ,null
+        );
+
+        elemEventSetter(
+            document.getElementsByTagName("button")
+            ,"click"
+            ,pushButton
+            ,null
+        )
+
+        elemEventSetter(
+            document.getElementsByClassName("danceAble")
+            ,"change"
+            ,seletedDanceAble
+            ,null
+        )
+        storager.delete();
+    }
+
+    function changeDance(){
+        if(this.value=="no"){
+           let dancekibouElem = document.getElementsByClassName("danceKibou");
+           let dancekibouElemLen = dancekibouElem.length;
+           for(let i=0; i<dancekibouElemLen; i++){
+               dancekibouElem[i].disabled=true;
+           }
+
+           let dancekibouSkillElem = document.getElementsByClassName("danceKibouSkill");
+           let dancekibouSkillElemLen = dancekibouSkillElem.length;
+           for(let i=0; i<dancekibouSkillElemLen; i++){
+               dancekibouSkillElem[i].disabled=true;
+           }
+
+           let danceAbleElem = document.getElementsByClassName("danceAble");
+           let danceAbleElemLen = danceAbleElem.length;
+           for(let i=0; i<danceAbleElemLen; i++){
+               danceAbleElem[i].disabled=true;
+           }
+
+           document.getElementById("register").scrollIntoView(true);
+        }else{
+           let dancekibouElem = document.getElementsByClassName("danceKibou");
+           let dancekibouElemLen = dancekibouElem.length;
+           for(let i=0; i<dancekibouElemLen; i++){
+               dancekibouElem[i].disabled=false;
+           }
+
+           let dancekibouSkillElem = document.getElementsByClassName("danceKibouSkill");
+           let dancekibouSkillElemLen = dancekibouSkillElem.length;
+           for(let i=0; i<dancekibouSkillElemLen; i++){
+               dancekibouSkillElem[i].disabled=false;
+           }
+
+           let danceAbleElem = document.getElementsByClassName("danceAble");
+           let danceAbleElemLen = danceAbleElem.length;
+           for(let i=0; i<danceAbleElemLen; i++){
+               danceAbleElem[i].disabled=false;
+           }
+        }
+    }
+
+    function changeDanceKibou(){
+            // 全リストを取得
+            let danceKibouList = document.getElementsByClassName("danceKibou");
+
+            let danceKibouLen = danceKibouList.length;
+
+            // 先に全選択値のリストを作る
+            let allSelectedDanceKibou = [];
+
+            for(let i=0; i<danceKibouLen; i++){
+                allSelectedDanceKibou.push(danceKibouList[i].value);
+            }
+
+            // 現オブジェクトの選択値を取得
+            let nowSelectedValue = this.value;
+
+            for(let i=0; i<danceKibouLen; i++){
+                // 現オブジェクトの選択値を取得
+                let nowSelectedValue = danceKibouList[i].value;
+
+                // １selectのダンス希望リストを取得
+                let thisDanceKibouList = danceKibouList[i].getElementsByTagName("option");
+
+                let thisDanceKibouListLength = thisDanceKibouList.length;
+
+                for(let k=0; k<thisDanceKibouListLength; k++){
+                    if(thisDanceKibouList[k].value === "notSelected"){
+                        continue;
+                    }
+
+                    // 自分の値はDisabledしない
+                    if(thisDanceKibouList[k].value == nowSelectedValue){
+                        continue;
+                    }
+
+                    thisDanceKibouList[k].disabled = false;
+                    // 一度解除した上で、全値リストに存在したらDisabledにする
+                    if(allSelectedDanceKibou.indexOf(thisDanceKibouList[k].value) >=0){
+                        thisDanceKibouList[k].disabled = true;
+                    }
+                }
+            }
+        console.log(this);
+        danceAbleChange.bind(this)();
+    }
+
+    function danceAbleChange(){
+        console.log(this);
+        let parent = this.parentNode;
+        let priority = parent.parentNode.className;
+
+        let selectedDanceId = parent.getElementsByTagName("select")[0].value;
+
+        let selectedDanceSkillElem = parent.getElementsByClassName("danceKibouSkill");
+        let len = selectedDanceSkillElem.length;
+
+        let selectedDanceSkill = null;
+
+        for(let i=0; i<len; i++){
+            if(selectedDanceSkillElem[i].checked){
+                selectedDanceSkill = selectedDanceSkillElem[i].value;
+            }
+        }
+
+        // ローカルストレージからDanceIDとSkillCodeを取得して変更した項目のDisabledを解除
+        if(storager.check("prevDanceId"+priority)){
+            // ダンスIDが記録されていなかったらスキップ
+            let prevDanceId = storager.get("prevDanceId"+priority);
+            let prevDanceLevel = storager.get("prevDanceLevel"+priority);
+
+            document.getElementById("danceableLevel"+prevDanceLevel+"_"+prevDanceId).checked=false;
+
+            for(let i=1; i<=3; i++){
+                document.getElementById("danceableLevel"+i+"_"+prevDanceId).disabled=false;
+            }
+        }
+
+
+        if(!selectedDanceSkill || selectedDanceId=="notSelected"){
+            // レベルか楽曲のいずれかが選ばれていなかったらリターン
+            return;
+        }
+
+
+        for(let i=1; i<=3; i++){
+            document.getElementById("danceableLevel"+i+"_"+selectedDanceId).disabled=true;
+            // 一度全選択を削除
+            document.getElementById("danceableLevel"+i+"_"+selectedDanceId).checked=false;
+        }
+
+        document.getElementById("danceableLevel"+selectedDanceSkill+"_"+selectedDanceId).checked=true;
+
+        // ローカルストレージにDanceIDとSkillCodeを記録
+        storager.set("prevDanceId"+priority,selectedDanceId);
+        storager.set("prevDanceLevel"+priority,selectedDanceSkill);
+    }
+
+    function elemEventSetter(elems,event,eventFunc,argArr=null){
+        if(elems[0]){
+            let len = elems.length;
+            for(let i=0; i<len; i++){
+                elems[i].addEventListener(event,eventFunc,this,argArr);
+            }
+        }else{
+            elems.addEventListener(event,eventFunc,this,argArr);
+        }
+    }
+
+    function seletedDanceAble(){
+        // 想定としてセレクトボックスを選択された場合
+        // ボックスの選択は出来るが、自動的に前のチェックボックスを外す
+        thisDanceId = this.value;
+        thisSkillLevel = this.parentNode.parentNode.className;
+
+        for(let i=1; i<=3; i++){
+            if(i==thisSkillLevel){
+                continue;
+            }
+            // checkがついていたらthis.checkedはtrueになり、外れていたらFalseになるため
+            document.getElementById("danceableLevel"+i+"_"+thisDanceId).checked=false;
+        }
+    }
+
+    function pushButton(){
+        // registerしかない想定だが一応
+        if(this.value=="register"){
+            // テーブル構造はID,USER名、優先度、練度コードの順
+            // まず練度順に曲目リストを回収。重複の場合は一番大きい値を使う(重複除けが出来てないため)
+            let ancateDataArr = [];
+
+            let userName = document.getElementById("personalData").value;
+
+            // ダンス参加しない場合、ダンス不参加という曲で登録する(のちの処理がめんどいうえ簡易式なので)
+            if(document.getElementsByName("shallWeDance")[1].checked){
+                ancateDataArr[0] = new AncateData;
+                ancateDataArr[0].danceId = "0";
+                ancateDataArr[0].userName = userName;
+                ancateDataArr[0].priority = "null";
+                ancateDataArr[0].skillLevel = "null";
+            }else{
+                let DanceList = document.getElementsByClassName("danceAble");
+                let DanceListlen = DanceList.length;
+
+                let selectedDanceList=[];
+                for(let i=0; i<DanceListlen; i++){
+                    if(DanceList[i].checked){
+                        selectedDanceList.push(DanceList[i]);
+                    }
+                }
+
+                let selectedDanceListLen = selectedDanceList.length;
+
+                for(let i=0; i<selectedDanceListLen; i++){
+                    ancateDataArr[i] = new AncateData;
+                    ancateDataArr[i].danceId = selectedDanceList[i].value;
+                    ancateDataArr[i].userName = userName;
+                    ancateDataArr[i].skillLevel = selectedDanceList[i].parentNode.parentNode.className;
+                    ancateDataArr[i].priority = "null";
+
+                    let danceKibouList = document.getElementsByClassName("danceKibou");
+                    let danceKibouListLen = danceKibouList.length;
+
+                    for(let k=0; k< danceKibouListLen; k++){
+                        if(danceKibouList[k].value==selectedDanceList[i].value){
+                            ancateDataArr[i].priority = danceKibouList[k].parentNode.parentNode.className;
+                        }
+                    }
+                }
+            }
+
+
+            let argArr = {
+                sql:ancateDataArr
+                ,tableName:"T_USER_SELECTE_DANCE"
+            };
+
+            defaultAjax(argArr,"/anc/anc/php/insertMaker.php").then(function(data){
+                console.log(data);
+                alert("登録完了");
+            }).then(function(data){
+                //
+                console.log(data);
+            });
+
+        }
+    }
+
+let AncateData = function(){
+    this.danceId = "";
+    this.userName = "";
+    this.priority = "";
+    this.skillLevel = "";
+
+}
+
+</script>
