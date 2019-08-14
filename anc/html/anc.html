@@ -47,10 +47,12 @@
         echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
         echo "　";
     }
+    echo "<lavel class='inline-block'>";
     forEach($danceSkillList as $danceSkill){
         echo "<input type='radio' class='danceKibouSkill' name='danceKibou1Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
         echo "　";
     }
+    echo "</lavel>";
     echo "</p>\n";
 ?>
 </div>
@@ -68,10 +70,12 @@
         echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
         echo "　";
     }
+    echo "<lavel class='inline-block'>";
     forEach($danceSkillList as $danceSkill){
         echo "<input type='radio' class='danceKibouSkill' name='danceKibou2Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
         echo "　";
     }
+    echo "</lavel>";
     echo "</p>\n";
 ?>
 </div>
@@ -89,10 +93,12 @@
         echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
         echo "　";
     }
+    echo "<lavel class='inline-block'>";
     forEach($danceSkillList as $danceSkill){
         echo "<input type='radio' class='danceKibouSkill' name='danceKibou3Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
         echo "　";
     }
+    echo "</lavel>";
     echo "</p>\n";
 ?>
 </div>
@@ -105,8 +111,10 @@
         if($dance["DANCE_ID"] == "0"){
             continue;
         }
+        echo "<lavel class='inline-block'>";
         echo "<input type='checkbox' id = 'danceableLevel1_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
         echo "　";
+        echo "</lavel>";
     }
     echo "</p>\n";
 ?>
@@ -120,8 +128,10 @@
         if($dance["DANCE_ID"] == "0"){
             continue;
         }
+        echo "<lavel class='inline-block'>";
         echo "<input type='checkbox' id = 'danceableLevel2_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
         echo "　";
+        echo "</lavel>";
     }
     echo "</p>\n";
 ?>
@@ -135,13 +145,15 @@
         if($dance["DANCE_ID"] == "0"){
             continue;
         }
+        echo "<lavel class='inline-block'>";
         echo "<input type='checkbox' id = 'danceableLevel3_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
         echo "　";
+        echo "</lavel>";
     }
     echo "</p>\n";
 ?>
 </div>
-
+<p>編集・閲覧用パスワード(登録後に回答を確認、変更する際に必要になります)<input id="pass" type="password"></p>
 <p><button id ="register" type="button" value="register" >登録</button></p>
 
 </form>
@@ -271,10 +283,10 @@
                     }
                 }
             }
-            
+
             let priority = this.parentNode.parentNode.className;
             let skillList = document.getElementsByName("danceKibou" + priority + "Skill");
-            
+
             if(this.value==="notSelected"){
                 for(let i=0; i< 3; i++){
                     skillList[i].disabled=true;
@@ -369,26 +381,26 @@
         if(this.value=="register"){
             let userName = document.getElementById("personalData").value;
             let twitterId = document.getElementById("twitterId").value;
-            
+
             varidationCheck(userName,twitterId);
         }
     }
-    
+
     function varidationCheck(userName,twitterId){
         //必須項目未チェック、ボックス選択してラジオボタン未選択
         if(userName===""){
             alert("ユーザー名が入力されていません");
             return 0;
         }
-        
+
         if(twitterId===""){
             alert("twitterIDが入力されていません");
             return 0;
         }
-        
+
         let danceKibouList = document.getElementsByClassName("danceKibou");
         let danceKibouListLen = danceKibouList.length;
-        
+
         for(let i=0; i<danceKibouListLen; i++){
             if(danceKibouList[i].value!="notSelected"){
                 let danceKibouSkillList = document.getElementsByName("danceKibou"+(i+1)+"Skill");
@@ -405,7 +417,7 @@
                 }
             }
         }
-        
+
         call_stored("duplicationCheck",{user_name:userName,twitterId:twitterId}).then(function(data){
             if(data[0]["sameNameCount"]){
                 alert("ユーザーIDかTwitterIDが重複しています");
@@ -415,17 +427,18 @@
             }
         });
     }
-    
+
     function register(userName,twitterId){
         // テーブル構造はID,USER名、優先度、練度コードの順
         let ancateDataArr = [];
 
+        let pass = document.getElementById("pass").value;
+
         // ダンス参加しない場合、ダンス不参加という曲で登録する(のちの処理がめんどいうえ簡易式なので)
         if(document.getElementsByName("shallWeDance")[1].checked){
             ancateDataArr[0] = new AncateData;
+            ancateDataArr[0].userId = "";
             ancateDataArr[0].danceId = "0";
-            ancateDataArr[0].userName = userName;
-            ancateDataArr[0].twitterId = twitterId;
             ancateDataArr[0].priority = "null";
             ancateDataArr[0].skillLevel = "null";
         }else{
@@ -443,9 +456,8 @@
 
             for(let i=0; i<selectedDanceListLen; i++){
                 ancateDataArr[i] = new AncateData;
+                ancateDataArr[i].userId = "";
                 ancateDataArr[i].danceId = selectedDanceList[i].value;
-                ancateDataArr[i].userName = userName;
-                ancateDataArr[i].twitterId = twitterId;
                 ancateDataArr[i].skillLevel = selectedDanceList[i].parentNode.parentNode.className;
                 ancateDataArr[i].priority = "null";
 
@@ -463,9 +475,17 @@
         let argArr = {
             sql:ancateDataArr
             ,tableName:"T_USER_SELECTED_DANCE"
+            ,storedName:""
+            ,userRegisterArr:{
+                userId:""
+                ,userName:userName
+                ,twitterId:twitterId
+                ,pass:pass
+                ,hash:""
+            }
         };
 
-        defaultAjax(argArr,"/anc/common/php/insertMaker.php").then(function(data){
+        defaultAjax(argArr,"/anc/common/php/register.php").then(function(data){
             console.log(data);
             alert("登録完了");
         },function(err){
@@ -475,9 +495,9 @@
 
 let AncateData = function(){
     this.danceId = "";
-    this.userName = "";
-    this.twitterId = "";
+    this.userId = "";
     this.priority = "";
     this.skillLevel = "";
 }
+
 </script>

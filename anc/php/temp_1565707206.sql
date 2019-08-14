@@ -1,3 +1,0 @@
-INSERT INTO T_USER_SELECTE_DANCE VALUES(('1','test','1','1',));
-COMMIT
-quit

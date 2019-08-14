@@ -38,6 +38,10 @@ h1{
 	color:#cc0000;
 }
 
+.inline-block{
+	display: inline-block;
+}
+
 textarea{
 	width:80%;
 	height:100px;
@@ -134,5 +138,3 @@ textarea{
 		width:60%;
 	}
 }
-
-
