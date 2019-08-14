@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<link rel="stylesheet" href="/anc/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/anc/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/anc/API/javascript/storager.js"></script>
+<script type="text/javascript" src="/anc/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<title>選択者数</title>
+</head>
+<body>
+
+<?php
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
+    require_once($root."/anc/common/php/stored.php");
+
+    $userDanceList = stored("getSelectedNum",NULL);
+?>
+<table>
+<div>
+<a href="/anc/result/html/result.html">総合</a>
+<a href="/anc/result/html/priority.html">優先度</a>
+<a href="/anc/result/html/skill.html">練度</a>
+</div>
+<?php
+        echo "<tr>";
+        echo "<td>ダンス</td>";
+        echo "<td>選択者数</td>";
+        echo "</tr>";
+    forEach($userDanceList as $userDance){
+        echo "<tr>";
+        echo "<td>".$userDance["DANCE_NAME"]."</td>";
+        echo "<td>".$userDance["selectedNum"]."</td>";
+        echo "</tr>";
+    }
+?>
+</body>

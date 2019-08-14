@@ -2,10 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <link rel="stylesheet" href="/anc/common/css/base.css" type="text/css" media="screen">
 <link rel="stylesheet" href="/anc/common/css/table_conf.css" type="text/css" media="screen">
 <script type="text/javascript" src="/anc/API/javascript/storager.js"></script>
 <script type="text/javascript" src="/anc/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="/anc/API/javascript/call_stored.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <title>ダンスアンケート</title>
@@ -20,18 +23,20 @@
     $danceList = stored("getItems",NULL);
     $danceSkillList = stored("getSkillList",NULL);
 ?>
+<h1>ダンスについてのアンケート</h1>
 <form>
 <div id="personalDataWrapper">
     <p>問1：君の、名前は：<input type="text" id="personalData"></p>
+    <p>問2：キミノ　アカウントメイヲ　オシエテ：<input type="text" id="twitterId"></p>
 </div>
 
 <div id="q1">
-    <p>問2:本気のダンスに参加する意思の有無を答えよ。ただし、興味はあるが振り付けを覚えていない者の参加企画は別に存在するものとする。　　<input type="radio" name="shallWeDance" value="yes" checked>はい<input type="radio" name="shallWeDance" value="no">いいえ</p>
+    <p>問3:本気のダンスに参加する意思の有無を答えよ。ただし、興味はあるが振り付けを覚えていない者の参加企画は別に存在するものとする。　　<input type="radio" name="shallWeDance" value="yes" checked>はい<input type="radio" name="shallWeDance" value="no">いいえ</p>
 </div>
 
 <div id="q2Wrapper" class="1">
 <?php
-    echo "<p>問3：「だいいちきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
+    echo "<p>問4：「だいいちきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
     echo "<p>";
     echo "<select id='danceKibou1' class='danceKibou'>";
     echo "<option value='notSelected'>----------";
@@ -43,7 +48,7 @@
         echo "　";
     }
     forEach($danceSkillList as $danceSkill){
-        echo "<input type='radio' class='danceKibouSkill' name='danceKibou1Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"];
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou1Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
         echo "　";
     }
     echo "</p>\n";
@@ -52,7 +57,7 @@
 
 <div id="q3Wrapper" class="2">
 <?php
-    echo "<p>問4：「だいにきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
+    echo "<p>問5：「だいにきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
     echo "<p>";
     echo "<select id='danceKibou2' class='danceKibou'>";
     echo "<option value='notSelected'>----------";
@@ -64,7 +69,7 @@
         echo "　";
     }
     forEach($danceSkillList as $danceSkill){
-        echo "<input type='radio' class='danceKibouSkill' name='danceKibou2Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"];
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou2Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
         echo "　";
     }
     echo "</p>\n";
@@ -73,7 +78,7 @@
 
 <div id="q4Wrapper" class="3">
 <?php
-    echo "<p>問5:「だいさんきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
+    echo "<p>問6:「だいさんきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
     echo "<p>";
     echo "<select id='danceKibou3' class='danceKibou'>";
     echo "<option value='notSelected'>----------";
@@ -85,7 +90,7 @@
         echo "　";
     }
     forEach($danceSkillList as $danceSkill){
-        echo "<input type='radio' class='danceKibouSkill' name='danceKibou3Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"];
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou3Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
         echo "　";
     }
     echo "</p>\n";
@@ -94,7 +99,7 @@
 
 <div id="danceAbleLevel1" class="1">
 <?php
-    echo "<p>問6:以下の楽曲の中で、練度1で踊れる曲をすべて選べ</p>";
+    echo "<p>問7:以下の楽曲の中で、練度1で踊れる曲をすべて選べ</p>";
     echo "<p>";
     forEach($danceList as $dance){
         if($dance["DANCE_ID"] == "0"){
@@ -109,7 +114,7 @@
 
 <div id="danceAbleLevel2" class="2">
 <?php
-    echo "<p>問7:以下の楽曲の中で、練度2で踊れる曲をすべて選べ</p>";
+    echo "<p>問8:以下の楽曲の中で、練度2で踊れる曲をすべて選べ</p>";
     echo "<p>";
     forEach($danceList as $dance){
         if($dance["DANCE_ID"] == "0"){
@@ -124,7 +129,7 @@
 
 <div id="danceAbleLevel3" class="3">
 <?php
-    echo "<p>問8:以下の楽曲の中で、練度3で踊れる曲をすべて選べ</p>";
+    echo "<p>問9:以下の楽曲の中で、練度3で踊れる曲をすべて選べ</p>";
     echo "<p>";
     forEach($danceList as $dance){
         if($dance["DANCE_ID"] == "0"){
@@ -137,8 +142,7 @@
 ?>
 </div>
 
-<p><button id ="register" type="button" value="register" >登録(確認ページに遷移します)</button></p>
-
+<p><button id ="register" type="button" value="register" >登録</button></p>
 
 </form>
 </body>
@@ -267,6 +271,20 @@
                     }
                 }
             }
+            
+            let priority = this.parentNode.parentNode.className;
+            let skillList = document.getElementsByName("danceKibou" + priority + "Skill");
+            
+            if(this.value==="notSelected"){
+                for(let i=0; i< 3; i++){
+                    skillList[i].disabled=true;
+                    skillList[i].checked=false;
+                }
+            }else{
+                for(let i=0; i< 3; i++){
+                    skillList[i].disabled=false;
+                }
+            }
         console.log(this);
         danceAbleChange.bind(this)();
     }
@@ -302,12 +320,10 @@
             }
         }
 
-
         if(!selectedDanceSkill || selectedDanceId=="notSelected"){
             // レベルか楽曲のいずれかが選ばれていなかったらリターン
             return;
         }
-
 
         for(let i=1; i<=3; i++){
             document.getElementById("danceableLevel"+i+"_"+selectedDanceId).disabled=true;
@@ -351,73 +367,117 @@
     function pushButton(){
         // registerしかない想定だが一応
         if(this.value=="register"){
-            // テーブル構造はID,USER名、優先度、練度コードの順
-            // まず練度順に曲目リストを回収。重複の場合は一番大きい値を使う(重複除けが出来てないため)
-            let ancateDataArr = [];
-
             let userName = document.getElementById("personalData").value;
-
-            // ダンス参加しない場合、ダンス不参加という曲で登録する(のちの処理がめんどいうえ簡易式なので)
-            if(document.getElementsByName("shallWeDance")[1].checked){
-                ancateDataArr[0] = new AncateData;
-                ancateDataArr[0].danceId = "0";
-                ancateDataArr[0].userName = userName;
-                ancateDataArr[0].priority = "null";
-                ancateDataArr[0].skillLevel = "null";
-            }else{
-                let DanceList = document.getElementsByClassName("danceAble");
-                let DanceListlen = DanceList.length;
-
-                let selectedDanceList=[];
-                for(let i=0; i<DanceListlen; i++){
-                    if(DanceList[i].checked){
-                        selectedDanceList.push(DanceList[i]);
+            let twitterId = document.getElementById("twitterId").value;
+            
+            varidationCheck(userName,twitterId);
+        }
+    }
+    
+    function varidationCheck(userName,twitterId){
+        //必須項目未チェック、ボックス選択してラジオボタン未選択
+        if(userName===""){
+            alert("ユーザー名が入力されていません");
+            return 0;
+        }
+        
+        if(twitterId===""){
+            alert("twitterIDが入力されていません");
+            return 0;
+        }
+        
+        let danceKibouList = document.getElementsByClassName("danceKibou");
+        let danceKibouListLen = danceKibouList.length;
+        
+        for(let i=0; i<danceKibouListLen; i++){
+            if(danceKibouList[i].value!="notSelected"){
+                let danceKibouSkillList = document.getElementsByName("danceKibou"+(i+1)+"Skill");
+                let num=0;
+                for(let k=0; k<3; k++){
+                    if(danceKibouSkillList[k].checked == true){
+                        num++;
+                        break;
                     }
                 }
+                if(!num){
+                    alert("第" +(i+1)+ "希望曲の練度が選択されていません");
+                    return 0;
+                }
+            }
+        }
+        
+        call_stored("duplicationCheck",{user_name:userName,twitterId:twitterId}).then(function(data){
+            if(data[0]["sameNameCount"]){
+                alert("ユーザーIDかTwitterIDが重複しています");
+                return 0;
+            }else{
+                register(userName,twitterId);
+            }
+        });
+    }
+    
+    function register(userName,twitterId){
+        // テーブル構造はID,USER名、優先度、練度コードの順
+        let ancateDataArr = [];
 
-                let selectedDanceListLen = selectedDanceList.length;
+        // ダンス参加しない場合、ダンス不参加という曲で登録する(のちの処理がめんどいうえ簡易式なので)
+        if(document.getElementsByName("shallWeDance")[1].checked){
+            ancateDataArr[0] = new AncateData;
+            ancateDataArr[0].danceId = "0";
+            ancateDataArr[0].userName = userName;
+            ancateDataArr[0].twitterId = twitterId;
+            ancateDataArr[0].priority = "null";
+            ancateDataArr[0].skillLevel = "null";
+        }else{
+            let DanceList = document.getElementsByClassName("danceAble");
+            let DanceListlen = DanceList.length;
 
-                for(let i=0; i<selectedDanceListLen; i++){
-                    ancateDataArr[i] = new AncateData;
-                    ancateDataArr[i].danceId = selectedDanceList[i].value;
-                    ancateDataArr[i].userName = userName;
-                    ancateDataArr[i].skillLevel = selectedDanceList[i].parentNode.parentNode.className;
-                    ancateDataArr[i].priority = "null";
-
-                    let danceKibouList = document.getElementsByClassName("danceKibou");
-                    let danceKibouListLen = danceKibouList.length;
-
-                    for(let k=0; k< danceKibouListLen; k++){
-                        if(danceKibouList[k].value==selectedDanceList[i].value){
-                            ancateDataArr[i].priority = danceKibouList[k].parentNode.parentNode.className;
-                        }
-                    }
+            let selectedDanceList=[];
+            for(let i=0; i<DanceListlen; i++){
+                if(DanceList[i].checked){
+                    selectedDanceList.push(DanceList[i]);
                 }
             }
 
+            let selectedDanceListLen = selectedDanceList.length;
 
-            let argArr = {
-                sql:ancateDataArr
-                ,tableName:"T_USER_SELECTE_DANCE"
-            };
+            for(let i=0; i<selectedDanceListLen; i++){
+                ancateDataArr[i] = new AncateData;
+                ancateDataArr[i].danceId = selectedDanceList[i].value;
+                ancateDataArr[i].userName = userName;
+                ancateDataArr[i].twitterId = twitterId;
+                ancateDataArr[i].skillLevel = selectedDanceList[i].parentNode.parentNode.className;
+                ancateDataArr[i].priority = "null";
 
-            defaultAjax(argArr,"/anc/anc/php/insertMaker.php").then(function(data){
-                console.log(data);
-                alert("登録完了");
-            }).then(function(data){
-                //
-                console.log(data);
-            });
+                let danceKibouList = document.getElementsByClassName("danceKibou");
+                let danceKibouListLen = danceKibouList.length;
 
+                for(let k=0; k< danceKibouListLen; k++){
+                    if(danceKibouList[k].value==selectedDanceList[i].value){
+                        ancateDataArr[i].priority = danceKibouList[k].parentNode.parentNode.className;
+                    }
+                }
+            }
         }
+
+        let argArr = {
+            sql:ancateDataArr
+            ,tableName:"T_USER_SELECTED_DANCE"
+        };
+
+        defaultAjax(argArr,"/anc/common/php/insertMaker.php").then(function(data){
+            console.log(data);
+            alert("登録完了");
+        },function(err){
+            console.log(err);
+        });
     }
 
 let AncateData = function(){
     this.danceId = "";
     this.userName = "";
+    this.twitterId = "";
     this.priority = "";
     this.skillLevel = "";
-
 }
-
 </script>
