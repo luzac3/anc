@@ -59,7 +59,7 @@ function insertMaker($argArr){
       $ret = "sh " . $root . "anc/common/sh/kickSql.sh " .$sqlFileDir.$tempFile. " " .$username. " " .$server. " " .$password. " " .$db_name;
 
       // sqlファイルを生成し、シェルスクリプトをキックすることで起動し、削除する
-      $output = shell_exec("sh " . $root . "/anc/common/sh/kickSql.sh " .$sqlFileDir.$tempFile. " " .$username. " " .$server. " " .$password. " " .$db_name);
+      $output = shell_exec("sh " . $root . "anc/common/sh/kickSql.sh " .$sqlFileDir.$tempFile. " " .$username. " " .$server. " " .$password. " " .$db_name);
 
   /*
       // ファイルの削除

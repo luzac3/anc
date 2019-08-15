@@ -37,6 +37,11 @@ h1{
 .red{
 	color:#cc0000;
 }
+
+.inline-block{
+	display:inline-block;
+}
+
 #footer{
 	width:100%;
 	position:absolute;
@@ -127,5 +132,3 @@ h1{
 		width:60%;
 	}
 }
-
-

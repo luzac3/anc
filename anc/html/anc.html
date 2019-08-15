@@ -1,3 +1,13 @@
+<?php
+if(!isset($_SESSION)){
+  session_start();
+}
+if(!empty($_SESSION['userName'])){
+    $userId = $_SESSION['userId'];
+    $userName = $_SESSION['userName'];
+    $twitterId = $_SESSION['twitterId'];
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +18,7 @@
 <link rel="stylesheet" href="/anc/common/css/table_conf.css" type="text/css" media="screen">
 <script type="text/javascript" src="/anc/API/javascript/storager.js"></script>
 <script type="text/javascript" src="/anc/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="/anc/common/js/elemEventSetter.js"></script>
 <script type="text/javascript" src="/anc/API/javascript/call_stored.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -22,135 +33,120 @@
 
     $danceList = stored("getItems",NULL);
     $danceSkillList = stored("getSkillList",NULL);
+
+    if(!empty($userId)){
+        $userSelectedDanceToPriorityList = stored("getuserSelectedDanceToPriority",array($userId));
+        // 優先度数だけ設定しておく
+        $priorityDanceList = array(null,null,null);
+
+        $num = 0;
+
+        forEach($userSelectedDanceToPriorityList as $userSelectedDanceToPriority){
+          $priorityDanceList[((int)$userSelectedDanceToPriority["PRIORITY"])-1] = $userSelectedDanceToPriority;
+        }
+
+        $danceToUserSelectedList = stored("getDanceToUserSelected",array($userId));
+    }
 ?>
 <h1>ダンスについてのアンケート</h1>
 <form>
 <div id="personalDataWrapper">
-    <p>問1：君の、名前は：<input type="text" id="personalData"></p>
-    <p>問2：キミノ　アカウントメイヲ　オシエテ：<input type="text" id="twitterId"></p>
+    <?php
+        if(!$userName){
+          echo "<p>問1：君の、名前は：<input type='text' id='personalData'></p>";
+        }else{
+          echo "<p>問1：君の、名前は：<input type='text' id='personalData' value ='".$userName."' disabled></p>";
+        }
+        if(!$twitterId){
+          echo "<p>問2：キミノ　アカウントメイヲ　オシエテ：<input type='text' id='twitterId'></p>";
+        }else{
+          echo "<p>問2：キミノ　アカウントメイヲ　オシエテ：<input type='text' id='twitterId' value ='".$twitterId."' disabled></p>";
+        }
+    ?>
 </div>
 
 <div id="q1">
     <p>問3:本気のダンスに参加する意思の有無を答えよ。ただし、興味はあるが振り付けを覚えていない者の参加企画は別に存在するものとする。　　<input type="radio" name="shallWeDance" value="yes" checked>はい<input type="radio" name="shallWeDance" value="no">いいえ</p>
 </div>
 
-<div id="q2Wrapper" class="1">
+
+
 <?php
-    echo "<p>問4：「だいいちきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
-    echo "<p>";
-    echo "<select id='danceKibou1' class='danceKibou'>";
-    echo "<option value='notSelected'>----------";
+function setDanceList($danceList,$danceSkillList,$priority,$str,$priorityDanceList){
+    echo "<div class='".$priority."'>\n";
+    echo "<p>".$str."</p>\n";
+    echo "<p>\n";
+    echo "<select id='danceKibou".$priority."' class='danceKibou'>\n";
+
+    echo "<option value='notSelected'>----------\n";
+
     forEach($danceList as $dance){
         if($dance["DANCE_ID"] == "0"){
             continue;
         }
-        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
-        echo "　";
+        if(!empty($priorityDanceList[(int)$priority-1]) && $priorityDanceList[(int)$priority-1]["DANCE_ID"]==$dance["DANCE_ID"]){
+            echo "<option value='".$dance["DANCE_ID"]."' selected>".$dance["DANCE_NAME"]."\n";
+            continue;
+        }
+        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"]."\n";
+        echo "　\n";
     }
     echo "<lavel class='inline-block'>";
     forEach($danceSkillList as $danceSkill){
-        echo "<input type='radio' class='danceKibouSkill' name='danceKibou1Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
-        echo "　";
-    }
-    echo "</lavel>";
-    echo "</p>\n";
-?>
-</div>
-
-<div id="q3Wrapper" class="2">
-<?php
-    echo "<p>問5：「だいにきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
-    echo "<p>";
-    echo "<select id='danceKibou2' class='danceKibou'>";
-    echo "<option value='notSelected'>----------";
-    forEach($danceList as $dance){
-        if($dance["DANCE_ID"] == "0"){
+        if(!empty($priorityDanceList[(int)$priority-1])){
+            if($priorityDanceList[(int)$priority-1]["SKILL_CD"] == $danceSkill["SKILL_CD"]){
+                echo "<input type='radio' class='danceKibouSkill' name='danceKibou".$priority."Skill' value='".$danceSkill["SKILL_CD"]."' checked>".$danceSkill["SKILL_CNTNT"]."\n";
+                continue;
+            }
+            echo "<input type='radio' class='danceKibouSkill' name='danceKibou".$priority."Skill' value='".$danceSkill["SKILL_CD"]."'>".$danceSkill["SKILL_CNTNT"]."\n";
             continue;
         }
-        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
+        echo "<input type='radio' class='danceKibouSkill' name='danceKibou".$priority."Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"]."\n";
         echo "　";
     }
-    echo "<lavel class='inline-block'>";
-    forEach($danceSkillList as $danceSkill){
-        echo "<input type='radio' class='danceKibouSkill' name='danceKibou2Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
-        echo "　";
-    }
-    echo "</lavel>";
+    echo "</lavel>\n";
     echo "</p>\n";
-?>
-</div>
+    echo "</div>\n";
+}
 
-<div id="q4Wrapper" class="3">
-<?php
-    echo "<p>問6:「だいさんきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ</p>";
-    echo "<p>";
-    echo "<select id='danceKibou3' class='danceKibou'>";
-    echo "<option value='notSelected'>----------";
-    forEach($danceList as $dance){
-        if($dance["DANCE_ID"] == "0"){
-            continue;
-        }
-        echo "<option value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
-        echo "　";
-    }
-    echo "<lavel class='inline-block'>";
-    forEach($danceSkillList as $danceSkill){
-        echo "<input type='radio' class='danceKibouSkill' name='danceKibou3Skill' value='".$danceSkill["SKILL_CD"]."' disabled>".$danceSkill["SKILL_CNTNT"];
-        echo "　";
-    }
-    echo "</lavel>";
-    echo "</p>\n";
-?>
-</div>
+setDanceList($danceList,$danceSkillList,1,"問4：「だいいちきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ",$priorityDanceList);
+setDanceList($danceList,$danceSkillList,2,"問4：「だいにきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ",$priorityDanceList);
+setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ",$priorityDanceList);
 
-<div id="danceAbleLevel1" class="1">
-<?php
-    echo "<p>問7:以下の楽曲の中で、練度1で踊れる曲をすべて選べ</p>";
-    echo "<p>";
-    forEach($danceList as $dance){
-        if($dance["DANCE_ID"] == "0"){
-            continue;
-        }
-        echo "<lavel class='inline-block'>";
-        echo "<input type='checkbox' id = 'danceableLevel1_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
-        echo "　";
-        echo "</lavel>";
-    }
-    echo "</p>\n";
 ?>
-</div>
 
-<div id="danceAbleLevel2" class="2">
 <?php
-    echo "<p>問8:以下の楽曲の中で、練度2で踊れる曲をすべて選べ</p>";
-    echo "<p>";
-    forEach($danceList as $dance){
-        if($dance["DANCE_ID"] == "0"){
-            continue;
+    function setDanceListSkillBase($danceList,$danceSkill,$str,$danceToUserSelectedList){
+        echo "<div id='danceAbleLevel".$danceSkill."' class='".$danceSkill."'>\n";
+        echo "<p>".$str."</p>\n";
+        echo "<p>\n";
+        $num = 0;
+        forEach($danceList as $dance){
+            if($dance["DANCE_ID"] == "0"){
+                continue;
+            }
+            echo "<lavel class='inline-block'>";
+            echo "<input type='checkbox' id = 'danceableLevel".$danceSkill."_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'";
+            if(!empty($danceToUserSelectedList[$num]["USER_ID"])){
+                if($danceToUserSelectedList[$num]["SKILL_CD"]==$danceSkill){
+                      echo " checked";
+                }
+                if(!empty($danceToUserSelectedList[$num]["PRIORITY"])){
+                      echo " disabled";
+                }
+            }
+            echo ">".$dance["DANCE_NAME"];
+            echo "</lavel>\n";
+            $num++;
         }
-        echo "<lavel class='inline-block'>";
-        echo "<input type='checkbox' id = 'danceableLevel2_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
-        echo "　";
-        echo "</lavel>";
+        echo "</p>\n";
     }
-    echo "</p>\n";
-?>
-</div>
+    echo "</div>\n";
 
-<div id="danceAbleLevel3" class="3">
-<?php
-    echo "<p>問9:以下の楽曲の中で、練度3で踊れる曲をすべて選べ</p>";
-    echo "<p>";
-    forEach($danceList as $dance){
-        if($dance["DANCE_ID"] == "0"){
-            continue;
-        }
-        echo "<lavel class='inline-block'>";
-        echo "<input type='checkbox' id = 'danceableLevel3_".$dance["DANCE_ID"]."' class='danceAble' value='".$dance["DANCE_ID"]."'>".$dance["DANCE_NAME"];
-        echo "　";
-        echo "</lavel>";
-    }
-    echo "</p>\n";
+    setDanceListSkillBase($danceList,1,"問7:以下の楽曲の中で、練度1で踊れる曲をすべて選べ",$danceToUserSelectedList);
+    setDanceListSkillBase($danceList,2,"問8:以下の楽曲の中で、練度2で踊れる曲をすべて選べ",$danceToUserSelectedList);
+    setDanceListSkillBase($danceList,3,"問9:以下の楽曲の中で、練度3で踊れる曲をすべて選べ",$danceToUserSelectedList);
+
 ?>
 </div>
 <p>編集・閲覧用パスワード(登録後に回答を確認、変更する際に必要になります)<input id="pass" type="password"></p>
@@ -350,22 +346,11 @@
         storager.set("prevDanceLevel"+priority,selectedDanceSkill);
     }
 
-    function elemEventSetter(elems,event,eventFunc,argArr=null){
-        if(elems[0]){
-            let len = elems.length;
-            for(let i=0; i<len; i++){
-                elems[i].addEventListener(event,eventFunc,this,argArr);
-            }
-        }else{
-            elems.addEventListener(event,eventFunc,this,argArr);
-        }
-    }
-
     function seletedDanceAble(){
         // 想定としてセレクトボックスを選択された場合
         // ボックスの選択は出来るが、自動的に前のチェックボックスを外す
         thisDanceId = this.value;
-        thisSkillLevel = this.parentNode.parentNode.className;
+        thisSkillLevel = this.parentNode.parentNode.parentNode.className;
 
         for(let i=1; i<=3; i++){
             if(i==thisSkillLevel){
@@ -419,9 +404,16 @@
         }
 
         call_stored("duplicationCheck",{user_name:userName,twitterId:twitterId}).then(function(data){
-            if(data[0]["sameNameCount"]){
+            if(data[0]["BOTH_EXIST_FLG"]>0){
+                // 両方いる場合洗替
+                call_stored("washChange",{user_name:userName,twitterId:twitterId}).then(function(data){
+                    register(userName,twitterId);
+                });
+                return;
+            }
+            if(data[0]["ONE_SIDE_EXIST_FLG"]>0){
                 alert("ユーザーIDかTwitterIDが重複しています");
-                return 0;
+                return;
             }else{
                 register(userName,twitterId);
             }
@@ -458,7 +450,7 @@
                 ancateDataArr[i] = new AncateData;
                 ancateDataArr[i].userId = "";
                 ancateDataArr[i].danceId = selectedDanceList[i].value;
-                ancateDataArr[i].skillLevel = selectedDanceList[i].parentNode.parentNode.className;
+                ancateDataArr[i].skillLevel = selectedDanceList[i].parentNode.parentNode.parentNode.className;
                 ancateDataArr[i].priority = "null";
 
                 let danceKibouList = document.getElementsByClassName("danceKibou");
@@ -475,7 +467,7 @@
         let argArr = {
             sql:ancateDataArr
             ,tableName:"T_USER_SELECTED_DANCE"
-            ,storedName:""
+            ,storedName:"registerUser"
             ,userRegisterArr:{
                 userId:""
                 ,userName:userName
@@ -485,7 +477,7 @@
             }
         };
 
-        defaultAjax(argArr,"/anc/common/php/register.php").then(function(data){
+        defaultAjax(argArr,"/anc/anc/php/register.php").then(function(data){
             console.log(data);
             alert("登録完了");
         },function(err){
