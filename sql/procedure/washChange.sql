@@ -41,37 +41,26 @@ BEGIN
         SET exit_cd = 99;
     END;
 
-        SET @query = CONCAT("
-          delete from T_USER_SELECTED_DANCE
-          WHERE
-              user_id = (
-                  select distinct
-                      USER_ID
-                  from
-                      T_USER
-                  where
-                      user_name= '",_userName,"'
-                  AND
-                      twitter_id = '",_twitterId,"'
-              )
-          ;
-            
-          delete from T_USER
-          where
-              user_name = '",_userName,"'
-          AND
-              twitter_id = '",_twitterId,"'
-          ;
+      DELETE FROM T_USER_SELECTED_DANCE
+      WHERE
+          USER_ID = (
+              SELECT DISTINCT
+                  USER_ID
+              FROM
+                  T_USER
+              WHERE
+                  USER_NAME= _userName
+              AND
+                  TWITTER_ID = _twitterId
+          )
+      ;
 
-          ");
-
-
-    SET @query_text = @query;
-
-    -- 実行
-    PREPARE main_query FROM @query_text;
-    EXECUTE main_query;
-    DEALLOCATE PREPARE main_query;
+      DELETE FROM T_USER
+        WHERE
+            USER_NAME = _userName
+        AND
+            TWITTER_ID = _twitterId
+      ;
 
     SET exit_cd = 0;
 

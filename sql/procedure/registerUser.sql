@@ -29,6 +29,7 @@ CREATE PROCEDURE `registerUser`(
     IN `_userId` CHAR(20)
     , IN `_userName` CHAR(100)
     , IN `_twitterId` CHAR(50)
+    , IN `_dancePlanFlg` CHAR(1)
     , IN `_hash` CHAR(80)
     , OUT `exit_cd` INTEGER
 )
@@ -49,7 +50,7 @@ BEGIN
             INSERT INTO
                 T_USER
             VALUES(
-                '",_userId,"','",_userName,"','",_twitterId,"','",_hash,"'
+                '",_userId,"','",_userName,"','",_twitterId,"','",_dancePlanFlg,"','",_hash,"'
             )
         ")
         ;

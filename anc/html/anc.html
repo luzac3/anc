@@ -24,7 +24,7 @@ if(!empty($_SESSION['userName'])){
 
 <title>ダンスアンケート</title>
 </head>
-<body>
+<body><div id="main">
 
 <?php
     // データの取得
@@ -46,31 +46,44 @@ if(!empty($_SESSION['userName'])){
         }
 
         $danceToUserSelectedList = stored("getDanceToUserSelected",array($userId));
+    }else{
+      $priorityDanceList = null;
+      $danceToUserSelectedList = null;
     }
 ?>
-<h1>ダンスについてのアンケート</h1>
+<h1>　けものビート　ダンスについてのアンケート</h1>
+
 <form>
 <div id="personalDataWrapper">
     <?php
-        if(!$userName){
-          echo "<p>問1：君の、名前は：<input type='text' id='personalData'></p>";
+        if(empty($userName)){
+          echo "<p>１．お名前（ハンドルネーム、ツイッターネーム、二つ名など）：<input type='text' id='personalData'></p>";
         }else{
-          echo "<p>問1：君の、名前は：<input type='text' id='personalData' value ='".$userName."' disabled></p>";
+          echo "<p>１．お名前（ハンドルネーム、ツイッターネーム、二つ名など）：<input type='text' id='personalData' value ='".$userName."' disabled></p>";
         }
-        if(!$twitterId){
-          echo "<p>問2：キミノ　アカウントメイヲ　オシエテ：<input type='text' id='twitterId'></p>";
+        if(empty($twitterId)){
+          echo "<p>２．Twitterアカウント(＠から書いてね！）：<input type='text' id='twitterId'></p>";
         }else{
-          echo "<p>問2：キミノ　アカウントメイヲ　オシエテ：<input type='text' id='twitterId' value ='".$twitterId."' disabled></p>";
+          echo "<p>２．Twitterアカウント(＠から書いてね！）：<input type='text' id='twitterId' value ='".$twitterId."' disabled></p>";
         }
     ?>
 </div>
 
 <div id="q1">
-    <p>問3:本気のダンスに参加する意思の有無を答えよ。ただし、興味はあるが振り付けを覚えていない者の参加企画は別に存在するものとする。　　<input type="radio" name="shallWeDance" value="yes" checked>はい<input type="radio" name="shallWeDance" value="no">いいえ</p>
+    <p>３．当日は踊ってみたいですか？踊るなら企画に参加したいですか？</p>
+    <p>
+      <input type="radio" name="shallWeDance" value="1" checked> 1.これまで練習してきたダンスを踊りたい！　ガチダンス企画<br>
+      <input type="radio" name="shallWeDance" value="2">2.振り付けを覚えていないけど踊ってみたい！　ダンス体験企画<br>
+      <input type="radio" name="shallWeDance" value="3">3.ボクごろごろしてたい・・・　見てるだけで十分です(ダンス企画不参加)
+    </p>
+    <p>　２,３を選ばれた方のアンケートはここまでとなります。ご協力ありがとうございました!(必ず登録ボタンを押してくださいね！)</p>
 </div>
+<br>
 
-
-
+<p>　以下、ガチダンス企画に参加希望の方にお聞きします。<br>　それぞれの項目の３つの数字から当てはまるものをひとつづつ選んでください。</p>
+<p>1.自信を持って踊れる。この曲はお任せなのだ！<br>
+2.振り付けを覚えており、一通り踊れる。大丈夫大丈夫！<br>
+3.振り付けを覚えてはいるが、実際に踊る際に不安な箇所がある。ちょっと難しいねー</p><br>
 <?php
 function setDanceList($danceList,$danceSkillList,$priority,$str,$priorityDanceList){
     echo "<div class='".$priority."'>\n";
@@ -106,14 +119,16 @@ function setDanceList($danceList,$danceSkillList,$priority,$str,$priorityDanceLi
     }
     echo "</lavel>\n";
     echo "</p>\n";
-    echo "</div>\n";
+    echo "</div><br>\n";
 }
 
-setDanceList($danceList,$danceSkillList,1,"問4：「だいいちきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ",$priorityDanceList);
-setDanceList($danceList,$danceSkillList,2,"問4：「だいにきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ",$priorityDanceList);
-setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」として踊りたい楽曲を以下のボックスから選択し、練度を選択せよ",$priorityDanceList);
+setDanceList($danceList,$danceSkillList,1,"4.「だいいちきぼー」として踊りたい曲を以下のボックスから選択して、どれだけ踊れるか教えてください",$priorityDanceList);
+setDanceList($danceList,$danceSkillList,2,"5.「だいにきぼー」として踊りたい曲を以下のボックスから選択して、どれだけ踊れるか教えてください",$priorityDanceList);
+setDanceList($danceList,$danceSkillList,3,"6.「だいさんきぼー」として踊りたい曲を以下のボックスから選択して、どれだけ踊れるか教えてください",$priorityDanceList);
 
 ?>
+
+<p>　各ダンスについて、どれくらい踊れるか教えてください</p>
 
 <?php
     function setDanceListSkillBase($danceList,$danceSkill,$str,$danceToUserSelectedList){
@@ -140,20 +155,23 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
             $num++;
         }
         echo "</p>\n";
+        echo "</div><br>\n";
     }
-    echo "</div>\n";
 
-    setDanceListSkillBase($danceList,1,"問7:以下の楽曲の中で、練度1で踊れる曲をすべて選べ",$danceToUserSelectedList);
-    setDanceListSkillBase($danceList,2,"問8:以下の楽曲の中で、練度2で踊れる曲をすべて選べ",$danceToUserSelectedList);
-    setDanceListSkillBase($danceList,3,"問9:以下の楽曲の中で、練度3で踊れる曲をすべて選べ",$danceToUserSelectedList);
+    setDanceListSkillBase($danceList,1,"7.以下の曲の中で、「自信を持って踊れる」曲をすべて選んでください。",$danceToUserSelectedList);
+    setDanceListSkillBase($danceList,2,"8.以下の曲の中で、「振り付けを覚えていて、一通り踊れる」曲をすべて選んでください。",$danceToUserSelectedList);
+    setDanceListSkillBase($danceList,3,"9.以下の曲の中で、「振り付けは覚えているが、踊るときに不安な箇所がある」曲をすべて選んでください。",$danceToUserSelectedList);
 
 ?>
-</div>
+
+<p>　アンケートは以上です。<br>　このアンケートをもとに当日踊っていただく曲を決めていきますが、希望者の多少により、必ずしもご希望に添えない可能性があることをご了承ください。</p>
+<p>　ご協力ありがとうございました！登録ボタンを押すのを忘れないでくださいね！</p>
+
 <p>編集・閲覧用パスワード(登録後に回答を確認、変更する際に必要になります)<input id="pass" type="password"></p>
 <p><button id ="register" type="button" value="register" >登録</button></p>
 
 </form>
-</body>
+</div></body>
 </html>
 
 <script>
@@ -196,7 +214,7 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
     }
 
     function changeDance(){
-        if(this.value=="no"){
+        if(this.value !="1"){
            let dancekibouElem = document.getElementsByClassName("danceKibou");
            let dancekibouElemLen = dancekibouElem.length;
            for(let i=0; i<dancekibouElemLen; i++){
@@ -374,7 +392,7 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
     function varidationCheck(userName,twitterId){
         //必須項目未チェック、ボックス選択してラジオボタン未選択
         if(userName===""){
-            alert("ユーザー名が入力されていません");
+            alert("お名前が入力されていません");
             return 0;
         }
 
@@ -412,7 +430,7 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
                 return;
             }
             if(data[0]["ONE_SIDE_EXIST_FLG"]>0){
-                alert("ユーザーIDかTwitterIDが重複しています");
+                alert("お名前かTwitterIDが重複しています");
                 return;
             }else{
                 register(userName,twitterId);
@@ -427,7 +445,7 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
         let pass = document.getElementById("pass").value;
 
         // ダンス参加しない場合、ダンス不参加という曲で登録する(のちの処理がめんどいうえ簡易式なので)
-        if(document.getElementsByName("shallWeDance")[1].checked){
+        if(!document.getElementsByName("shallWeDance")[0].checked){
             ancateDataArr[0] = new AncateData;
             ancateDataArr[0].userId = "";
             ancateDataArr[0].danceId = "0";
@@ -464,6 +482,15 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
             }
         }
 
+        let dancePlanFlgList = document.getElementsByName("shallWeDance");
+        let dancePlanFlg="";
+
+        for(let i=0; i<3; i++){
+            if(dancePlanFlgList[i].checked){
+                dancePlanFlg=dancePlanFlgList[i].value;
+            }
+        }
+
         let argArr = {
             sql:ancateDataArr
             ,tableName:"T_USER_SELECTED_DANCE"
@@ -472,6 +499,7 @@ setDanceList($danceList,$danceSkillList,3,"問4：「だいさんきぼー」と
                 userId:""
                 ,userName:userName
                 ,twitterId:twitterId
+                ,dancePlanFlg:dancePlanFlg
                 ,pass:pass
                 ,hash:""
             }

@@ -12,7 +12,6 @@ if(!empty($_POST["argArr"])){
     $hash = password_hash($argArr["userRegisterArr"]["pass"], PASSWORD_DEFAULT);
     // user番号用のタイムスタンプ取得
     $time = time();
-
     $argArr["userRegisterArr"]["userId"] = $time;
     $argArr["userRegisterArr"]["hash"] = $hash;
 
@@ -20,6 +19,7 @@ if(!empty($_POST["argArr"])){
         $argArr["userRegisterArr"]["userId"]
         ,$argArr["userRegisterArr"]["userName"]
         ,$argArr["userRegisterArr"]["twitterId"]
+        ,$argArr["userRegisterArr"]["dancePlanFlg"]
         ,$argArr["userRegisterArr"]["hash"]
     );
 
@@ -28,14 +28,14 @@ if(!empty($_POST["argArr"])){
         $storedName
         ,$userRegisterArr
     );
-
+    
     forEach($argArr["sql"] as $key=>$sql){
         $argArr["sql"][$key]["userId"] = $time;
     }
 
     $output = insertMaker($argArr);
 
-    echo json_encode($output);
+    echo json_encode($result);
 }else{
     echo json_encode(0);
 }
