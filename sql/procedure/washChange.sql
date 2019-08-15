@@ -42,6 +42,20 @@ BEGIN
     END;
 
         SET @query = CONCAT("
+          delete from T_USER_SELECTED_DANCE
+          WHERE
+              user_id = (
+                  select distinct
+                      USER_ID
+                  from
+                      T_USER
+                  where
+                      user_name= '",_userName,"'
+                  AND
+                      twitter_id = '",_twitterId,"'
+              )
+          ;
+            
           delete from T_USER
           where
               user_name = '",_userName,"'
@@ -49,19 +63,6 @@ BEGIN
               twitter_id = '",_twitterId,"'
           ;
 
-          delete from T_USER_SELECTED_DANCE
-          WHERE
-              user_id = (
-                  select distinct
-                      user_id
-                  from
-                      T_USER
-                  where
-                      user_name= '",_userName,"'
-                  AND
-                      twitter_id = '",_twitterId,"'
-               )
-            ;
           ");
 
 
