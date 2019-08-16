@@ -68,9 +68,10 @@ if(!empty($_SESSION['userName'])){
         }
     ?>
 </div>
-
 <div id="q1">
-    <p>３．当日は踊ってみたいですか？踊るなら企画に参加したいですか？</p>
+    <p>３．当日は、振り付けを覚えている人向けのダンス企画と、振り付けを覚えていなくても参加できる<br>
+      「みんなでおどろう」企画(<a href = "https://sites.google.com/view/kemonobeat/">外部リンク</a>)を用意する予定です。<br>
+      当日は踊ってみたいですか？</p>
     <p>
       <input type="radio" name="shallWeDance" value="1" checked> 1.これまで練習してきたダンスを踊りたい！　ガチダンス企画<br>
       <input type="radio" name="shallWeDance" value="2">2.振り付けを覚えていないけど踊ってみたい！　ダンス体験企画<br>
@@ -507,9 +508,12 @@ setDanceList($danceList,$danceSkillList,3,"6.「だいさんきぼー」とし�
 
         defaultAjax(argArr,"/anc/anc/php/register.php").then(function(data){
             console.log(data);
-            alert("登録完了");
+            location.href = "/anc/anc/html/complete.html";
         },function(err){
             console.log(err);
+            storager.set("userName",userName);
+            storager.set("twitterId",twitterId);
+            location.href = "/anc/anc/html/error.html";
         });
     }
 
