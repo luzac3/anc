@@ -10,7 +10,7 @@
 <script type="text/javascript" src="/anc/common/js/defaultAjax.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<title>優先度別</title>
+<title>興味あり</title>
 </head>
 <body>
 
@@ -35,8 +35,8 @@
         echo "</tr>";
     forEach($interestUserList as $interestUser){
         echo "<tr>";
-        echo "<td>".$userDance["USER_NAME"]."</td>";
-        echo "<td>".$userDance["TWITTER_ID"]."</td>";
+        echo "<td>".$interestUser["USER_NAME"]."</td>";
+        echo "<td>".$interestUser["TWITTER_ID"]."</td>";
         echo "</tr>";
     }
 ?>
